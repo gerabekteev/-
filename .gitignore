@@ -1,0 +1,7 @@
+# Временные папки распаковки и сборок
+tmp_*
+bpmn_build/rebuild_temp/
+
+node_modules/
+bpmn_build/node_modules/
+
