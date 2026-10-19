@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Def_Prommash" targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <bpmn:collaboration id="Collab_1">
+    <bpmn:participant id="P_client" name="Клиент" />
+    <bpmn:participant id="P_so" name="Сервисный отдел" processRef="p_so" />
+    <bpmn:participant id="P_om" name="Администрация" processRef="p_om" />
+    <bpmn:participant id="P_kadr" name="Отдел кадров" processRef="p_kadr" />
+    <bpmn:participant id="P_dir" name="Дирекция" processRef="p_dir" />
+    <bpmn:participant id="P_buh" name="Бухгалтерия" processRef="p_buh" />
+    <bpmn:participant id="P_sup" name="Поставщики услуг (отель, транспорт)" />
+    <bpmn:messageFlow id="mf1" name="карточка на проверку" sourceRef="T4" targetRef="E_b1" />
+    <bpmn:messageFlow id="mf2" name="замечания" sourceRef="T21" targetRef="BE1" />
+    <bpmn:messageFlow id="mf3" name="запрос согласования" sourceRef="T22" targetRef="E2" />
+    <bpmn:messageFlow id="mf4" name="заявление на аванс" sourceRef="T7" targetRef="E_b3" />
+    <bpmn:messageFlow id="mf5" name="авансовый отчёт" sourceRef="T14" targetRef="E_b4" />
+    <bpmn:messageFlow id="mf6" name="командировка согласована" sourceRef="T16" targetRef="E_c1" />
+    <bpmn:messageFlow id="mf7" name="приказы на подпись" sourceRef="T13" targetRef="E_c2" />
+    <bpmn:messageFlow id="mf8" name="приказ подписан" sourceRef="T19" targetRef="T23" />
+    <bpmn:messageFlow id="mf9" name="приказ подписан" sourceRef="T19" targetRef="E_c3" />
+    <bpmn:messageFlow id="mf10" name="приказы на доработку" sourceRef="T26" targetRef="E_c4" />
+    <bpmn:messageFlow id="mf11" name="запрос согласования превышения" sourceRef="T28" targetRef="E_c6" />
+    <bpmn:messageFlow id="mf12" name="решение по превышению" sourceRef="T_b2" targetRef="T29" />
+    <bpmn:messageFlow id="mf13" name="заказ брони" sourceRef="T24" targetRef="P_sup" />
+    <bpmn:messageFlow id="mf14" name="подтверждение брони" sourceRef="P_sup" targetRef="T25" />
+    <bpmn:messageFlow id="mf15" name="запрос копий документов" sourceRef="T_b8" targetRef="P_sup" />
+    <bpmn:messageFlow id="mf16" name="копии документов" sourceRef="P_sup" targetRef="T_b9" />
+    <bpmn:messageFlow id="mf17" name="отчёт принят" sourceRef="T_b10" targetRef="T11" />
+  </bpmn:collaboration>
+
+  <bpmn:process id="p_so" name="Сервисный отдел">
+    <bpmn:laneSet id="ls_so">
+      <bpmn:lane id="L1" name="Командируемый сотрудник">
+        <bpmn:flowNodeRef>E1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>BE1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T8</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T7</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T10</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T14</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T11</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>BE3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T12</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_end1</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L2" name="Руководитель отдела">
+        <bpmn:flowNodeRef>E2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T15</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>XG1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T16</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T17</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="E1" name="Заявка клиента получена">
+      <bpmn:messageEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:userTask id="T2" name="Сформировать служебное задание (1С:CRM/ERP)" />
+    <bpmn:userTask id="T3" name="Создать карточку командировки (1С:ДО)" />
+    <bpmn:sendTask id="T4" name="Направить карточку на проверку (1С:ДО)" />
+    <bpmn:receiveTask id="T5" name="Ожидать результат проверки" />
+    <bpmn:boundaryEvent id="BE1" name="Возвращена с замечаниями" attachedToRef="T5" cancelActivity="true">
+      <bpmn:messageEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:userTask id="T6" name="Дозаполнить карточку по замечаниям" />
+    <bpmn:receiveTask id="T8" name="Ожидать согласования руководителя" />
+    <bpmn:userTask id="T7" name="Оформить заявление на аванс (1С:ДО)" />
+    <bpmn:userTask id="T10" name="Выполнить служебное задание (мобильный клиент 1С)" />
+    <bpmn:userTask id="T14" name="Оформить авансовый отчёт с фотофиксацией (1С)" />
+    <bpmn:receiveTask id="T11" name="Ожидать решения по авансовому отчёту" />
+    <bpmn:boundaryEvent id="BE3" name="Отчёт возвращён на доработку" attachedToRef="T11" cancelActivity="true">
+      <bpmn:messageEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:userTask id="T12" name="Скорректировать и направить отчёт" />
+    <bpmn:endEvent id="E_end1" name="Командировка закрыта" />
+    <bpmn:startEvent id="E2" name="Запрос на согласование">
+      <bpmn:messageEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:userTask id="T15" name="Согласовать командировку (1С:ДО)" />
+    <bpmn:exclusiveGateway id="XG1" name="Согласовано?" />
+    <bpmn:serviceTask id="T16" name="Автоуведомление отделу кадров (1С)" />
+    <bpmn:sendTask id="T17" name="Отклонить командировку с обоснованием" />
+    <bpmn:sequenceFlow id="f1" sourceRef="E1" targetRef="T2" />
+    <bpmn:sequenceFlow id="f2" sourceRef="T2" targetRef="T3" />
+    <bpmn:sequenceFlow id="f3" sourceRef="T3" targetRef="T4" />
+    <bpmn:sequenceFlow id="f4" sourceRef="T4" targetRef="T5" />
+    <bpmn:sequenceFlow id="f5" sourceRef="T5" targetRef="T8" />
+    <bpmn:sequenceFlow id="f6" sourceRef="BE1" targetRef="T6" />
+    <bpmn:sequenceFlow id="f7" sourceRef="T6" targetRef="T4" />
+    <bpmn:sequenceFlow id="f8" sourceRef="T8" targetRef="T7" />
+    <bpmn:sequenceFlow id="f9" sourceRef="T7" targetRef="T10" />
+    <bpmn:sequenceFlow id="f10" sourceRef="T10" targetRef="T14" />
+    <bpmn:sequenceFlow id="f11" sourceRef="T14" targetRef="T11" />
+    <bpmn:sequenceFlow id="f12" sourceRef="T11" targetRef="E_end1" />
+    <bpmn:sequenceFlow id="f13" sourceRef="BE3" targetRef="T12" />
+    <bpmn:sequenceFlow id="f14" sourceRef="T12" targetRef="T11" />
+    <bpmn:sequenceFlow id="f15" sourceRef="E2" targetRef="T15" />
+    <bpmn:sequenceFlow id="f16" sourceRef="T15" targetRef="XG1" />
+    <bpmn:sequenceFlow id="f17" name="да" sourceRef="XG1" targetRef="T16" />
+    <bpmn:sequenceFlow id="f18" name="нет" sourceRef="XG1" targetRef="T17" />
+    <bpmn:sequenceFlow id="f19" sourceRef="T17" targetRef="T9" />
+    <bpmn:sequenceFlow id="f20" sourceRef="T16" targetRef="E_end2" />
+    <bpmn:endEvent id="E_end2" name="Командировка согласована" />
+    <bpmn:userTask id="T9" name="Доработать карточку с учётом замечаний" />
+    <bpmn:sequenceFlow id="f21" sourceRef="T9" targetRef="T4" />
+  </bpmn:process>
+
+  <bpmn:process id="p_om" name="Администрация">
+    <bpmn:laneSet id="ls_om">
+      <bpmn:lane id="L3" name="Офис-менеджер">
+        <bpmn:flowNodeRef>E_b1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T20</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>XG2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T21</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T22</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T23</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T24</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>XG4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T28</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T29</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T25</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T27</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_end_om</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="E_b1" name="Карточка на проверке">
+      <bpmn:messageEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:userTask id="T20" name="Проверить полноту данных (1С:ДО)" />
+    <bpmn:exclusiveGateway id="XG2" name="Данные полны?" />
+    <bpmn:sendTask id="T21" name="Вернуть карточку с замечаниями" />
+    <bpmn:sendTask id="T22" name="Направить на согласование руководителю" />
+    <bpmn:receiveTask id="T23" name="Ожидать подписания приказа" />
+    <bpmn:userTask id="T24" name="Забронировать билеты, отель, трансфер (лимиты)" />
+    <bpmn:exclusiveGateway id="XG4" name="Лимит превышен?" />
+    <bpmn:sendTask id="T28" name="Запросить согласование превышения" />
+    <bpmn:receiveTask id="T29" name="Получить решение бухгалтерии" />
+    <bpmn:userTask id="T25" name="Получить подтверждение бронирования" />
+    <bpmn:userTask id="T27" name="Подтвердить бронирование, подготовить поездку" />
+    <bpmn:endEvent id="E_end_om" name="Поездка подготовлена" />
+    <bpmn:sequenceFlow id="f30" sourceRef="E_b1" targetRef="T20" />
+    <bpmn:sequenceFlow id="f31" sourceRef="T20" targetRef="XG2" />
+    <bpmn:sequenceFlow id="f32" name="нет" sourceRef="XG2" targetRef="T21" />
+    <bpmn:sequenceFlow id="f33" sourceRef="T21" targetRef="T20" />
+    <bpmn:sequenceFlow id="f34" name="да" sourceRef="XG2" targetRef="T22" />
+    <bpmn:sequenceFlow id="f35" sourceRef="T22" targetRef="T23" />
+    <bpmn:sequenceFlow id="f36" sourceRef="T23" targetRef="T24" />
+    <bpmn:sequenceFlow id="f37" sourceRef="T24" targetRef="XG4" />
+    <bpmn:sequenceFlow id="f38" name="нет" sourceRef="XG4" targetRef="T25" />
+    <bpmn:sequenceFlow id="f39" name="да" sourceRef="XG4" targetRef="T28" />
+    <bpmn:sequenceFlow id="f40" sourceRef="T28" targetRef="T29" />
+    <bpmn:sequenceFlow id="f41" sourceRef="T29" targetRef="T25" />
+    <bpmn:sequenceFlow id="f42" sourceRef="T25" targetRef="T27" />
+    <bpmn:sequenceFlow id="f43" sourceRef="T27" targetRef="E_end_om" />
+  </bpmn:process>
+
+  <bpmn:process id="p_kadr" name="Отдел кадров">
+    <bpmn:laneSet id="ls_kadr">
+      <bpmn:lane id="L4" name="Специалист отдела кадров">
+        <bpmn:flowNodeRef>E_c1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T31</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>XG5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T32</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T13</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_c4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_end_k</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="E_c1" name="Командировка согласована">
+      <bpmn:messageEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:userTask id="T31" name="Сформировать приказы (командировка, замещение)" />
+    <bpmn:exclusiveGateway id="XG5" name="Обучение требуется?" />
+    <bpmn:userTask id="T32" name="Организовать обучение и допуск" />
+    <bpmn:sendTask id="T13" name="Направить приказы на подпись (ЭП)" />
+    <bpmn:startEvent id="E_c4" name="Приказы возвращены">
+      <bpmn:messageEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:endEvent id="E_end_k" name="Приказы подписаны" />
+    <bpmn:sequenceFlow id="f44" sourceRef="E_c1" targetRef="T31" />
+    <bpmn:sequenceFlow id="f45" sourceRef="T31" targetRef="XG5" />
+    <bpmn:sequenceFlow id="f46" name="да" sourceRef="XG5" targetRef="T32" />
+    <bpmn:sequenceFlow id="f47" name="нет" sourceRef="XG5" targetRef="T13" />
+    <bpmn:sequenceFlow id="f48" sourceRef="T32" targetRef="T13" />
+    <bpmn:sequenceFlow id="f49" sourceRef="T13" targetRef="E_end_k" />
+    <bpmn:sequenceFlow id="f50" sourceRef="E_c4" targetRef="T31" />
+  </bpmn:process>
+
+  <bpmn:process id="p_dir" name="Дирекция">
+    <bpmn:laneSet id="ls_dir">
+      <bpmn:lane id="L5" name="Генеральный директор">
+        <bpmn:flowNodeRef>E_c2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T18</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>XG3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T19</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T26</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_end_d</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_end_d2</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="E_c2" name="Приказы на подпись">
+      <bpmn:messageEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:userTask id="T18" name="Подписать приказы (ЭП)" />
+    <bpmn:exclusiveGateway id="XG3" name="Подписаны?" />
+    <bpmn:serviceTask id="T19" name="Автоуведомление участникам (1С)" />
+    <bpmn:sendTask id="T26" name="Вернуть приказы на доработку" />
+    <bpmn:endEvent id="E_end_d" name="Приказы подписаны" />
+    <bpmn:endEvent id="E_end_d2" name="Приказы возвращены" />
+    <bpmn:sequenceFlow id="f51" sourceRef="E_c2" targetRef="T18" />
+    <bpmn:sequenceFlow id="f52" sourceRef="T18" targetRef="XG3" />
+    <bpmn:sequenceFlow id="f53" name="да" sourceRef="XG3" targetRef="T19" />
+    <bpmn:sequenceFlow id="f54" name="нет" sourceRef="XG3" targetRef="T26" />
+    <bpmn:sequenceFlow id="f55" sourceRef="T19" targetRef="E_end_d" />
+    <bpmn:sequenceFlow id="f56" sourceRef="T26" targetRef="E_end_d2" />
+  </bpmn:process>
+
+  <bpmn:process id="p_buh" name="Бухгалтерия">
+    <bpmn:laneSet id="ls_buh">
+      <bpmn:lane id="L6" name="Бухгалтер по расчётам">
+        <bpmn:flowNodeRef>E_b3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_b3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_end_b1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_c3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_b4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ev_t</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_b5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_end_b2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_c6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_b2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_end_b3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_b4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_b6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>XG_b</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_b10</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_end_b4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_b8</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_b9</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="E_b3" name="Заявление на аванс получено">
+      <bpmn:messageEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:userTask id="T_b3" name="Перечислить аванс (1С:ERP)" />
+    <bpmn:endEvent id="E_end_b1" name="Аванс перечислен" />
+    <bpmn:startEvent id="E_c3" name="Приказ подписан">
+      <bpmn:messageEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="T_b4" name="Запланировать выплату суточных" />
+    <bpmn:intermediateCatchEvent id="ev_t" name="За 3 дня до командировки">
+      <bpmn:timerEventDefinition />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:serviceTask id="T_b5" name="Выплатить суточные (1С:ЗУП)" />
+    <bpmn:endEvent id="E_end_b2" name="Суточные выплачены" />
+    <bpmn:startEvent id="E_c6" name="Превышение лимита">
+      <bpmn:messageEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:userTask id="T_b2" name="Согласовать превышение лимита" />
+    <bpmn:endEvent id="E_end_b3" name="Превышение согласовано" />
+    <bpmn:startEvent id="E_b4" name="Авансовый отчёт получен">
+      <bpmn:messageEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:userTask id="T_b6" name="Проверить авансовый отчёт" />
+    <bpmn:exclusiveGateway id="XG_b" name="Документы в порядке?" />
+    <bpmn:serviceTask id="T_b10" name="Провести расходы, закрыть подотчёт" />
+    <bpmn:endEvent id="E_end_b4" name="Расходы приняты к учёту" />
+    <bpmn:sendTask id="T_b8" name="Запросить копии у поставщиков" />
+    <bpmn:receiveTask id="T_b9" name="Получить копии документов" />
+    <bpmn:sequenceFlow id="f57" sourceRef="E_b3" targetRef="T_b3" />
+    <bpmn:sequenceFlow id="f58" sourceRef="T_b3" targetRef="E_end_b1" />
+    <bpmn:sequenceFlow id="f59" sourceRef="E_c3" targetRef="T_b4" />
+    <bpmn:sequenceFlow id="f60" sourceRef="T_b4" targetRef="ev_t" />
+    <bpmn:sequenceFlow id="f61" sourceRef="ev_t" targetRef="T_b5" />
+    <bpmn:sequenceFlow id="f62" sourceRef="T_b5" targetRef="E_end_b2" />
+    <bpmn:sequenceFlow id="f63" sourceRef="E_c6" targetRef="T_b2" />
+    <bpmn:sequenceFlow id="f64" sourceRef="T_b2" targetRef="E_end_b3" />
+    <bpmn:sequenceFlow id="f65" sourceRef="E_b4" targetRef="T_b6" />
+    <bpmn:sequenceFlow id="f66" sourceRef="T_b6" targetRef="XG_b" />
+    <bpmn:sequenceFlow id="f67" name="да" sourceRef="XG_b" targetRef="T_b10" />
+    <bpmn:sequenceFlow id="f68" sourceRef="T_b10" targetRef="E_end_b4" />
+    <bpmn:sequenceFlow id="f69" name="нет" sourceRef="XG_b" targetRef="T_b8" />
+    <bpmn:sequenceFlow id="f70" sourceRef="T_b8" targetRef="T_b9" />
+    <bpmn:sequenceFlow id="f71" sourceRef="T_b9" targetRef="T_b6" />
+  </bpmn:process>
+
+</bpmn:definitions>
